@@ -26,11 +26,11 @@ namespace AplicacoesDistribuidasAPI.Data.Mapping
 
             builder.Property(p => p.CreateAt)
                 .IsRequired()
-                .HasDefaultValue(new DateTime(2010, 01, 01));
+                .HasDefaultValue(new DateTime(0001, 01, 01));
 
 
             builder.Property(p => p.UpdateAt)
-                .HasDefaultValue(new DateTime(2010, 1, 1));
+                .HasDefaultValue(null);
 
         }
     }

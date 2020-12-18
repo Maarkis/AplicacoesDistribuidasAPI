@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,24 @@ namespace AplicacoesDistribuidasAPI.Application
             ConfigureDataBase.ConfigureDependenciesDataBase(services, Configuration.GetConnectionString("aplicacoesDistribuidas"));
 
             services.AddControllers();
+
+            services.AddSwaggerGen(swaggerGen =>
+            {
+                swaggerGen.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API - Aplicação distribuídas",
+                    Description = "API para gerenciamento de crud de produto",
+                    TermsOfService = new Uri("https://github.com/Maarkis/AplicacoesDistribuidasAPI"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Jean Markis",
+                        Email = "jeanmarkis85@gmail.com",
+                        Url = new Uri("https://github.com/Maarkis/AplicacoesDistribuidasAPI"),
+                    }
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +60,13 @@ namespace AplicacoesDistribuidasAPI.Application
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(swaggerUI =>
+            {
+                swaggerUI.SwaggerEndpoint("/swagger/v1/swagger.json", "CRUD de produto");
+                swaggerUI.RoutePrefix = string.Empty;
+            });
 
             app.UseHttpsRedirection();
 

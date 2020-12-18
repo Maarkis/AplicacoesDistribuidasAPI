@@ -53,6 +53,7 @@ namespace AplicacoesDistribuidasAPI.Data.Repository
 
                 item.UpdateAt = DateTime.UtcNow;
                 item.CreateAt = item.CreateAt;
+                item.Id = result.Id;
 
                 _context.Entry(result).CurrentValues.SetValues(item);
                 await _context.SaveChangesAsync();

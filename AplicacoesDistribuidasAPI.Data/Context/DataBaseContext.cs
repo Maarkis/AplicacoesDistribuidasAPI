@@ -1,6 +1,7 @@
 ﻿using AplicacoesDistribuidasAPI.Data.Mapping;
 using AplicacoesDistribuidasAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace AplicacoesDistribuidasAPI.Data.Context
 {
