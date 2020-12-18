@@ -2,4 +2,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AplicacoesDistribuidasAPI.CrossCutting\AplicacoesDistribuidasAPI.CrossCutting.csproj" />
+    <ProjectReference Include="..\AplicacoesDistribuidasAPI.Domain\AplicacoesDistribuidasAPI.Domain.csproj" />
+    <ProjectReference Include="..\AplicacoesDistribuidasAPI.Service\AplicacoesDistribuidasAPI.Service.csproj" />
+  </ItemGroup>
 </Project>

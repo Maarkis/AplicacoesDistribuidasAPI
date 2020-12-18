@@ -18,11 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mapping\" />
-    <Folder Include="Repository\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AplicacoesDistribuidasAPI.Domain\AplicacoesDistribuidasAPI.Domain.csproj" />
   </ItemGroup>
 </Project>

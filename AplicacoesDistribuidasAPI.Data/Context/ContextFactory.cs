@@ -1,18 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace AplicacoesDistribuidasAPI.Data.Context
 {
-    public class ContextFactory : IDesignTimeDbContextFactory<Context>
+    public class ContextFactory : IDesignTimeDbContextFactory<DataBaseContext>
     {
-        public Context CreateDbContext(string[] args)
-        {
+        //private readonly IConfiguration _configuration;
 
-            // Usado para criar as migrações
-            var connectString = "";
-            var optionsBuilder = new DbContextOptionsBuilder<Context>();
-            optionsBuilder.UseMySql(connectString);
-            return new Context(optionsBuilder.Options);
+        //public ContextFactory(IConfiguration configuration)
+        //{
+        //    _configuration = configuration;
+        //}
+
+        //public ContextFactory(IConfiguration configuration)
+        //{
+        //    _configuration = configuration;
+        //}
+        public DataBaseContext CreateDbContext(string[] args)
+        {
+            string connectString = "Server=localhost;Port=3306;Database=aplicacoesDistribuidas;Uid=root;Pwd=123456";
+            DbContextOptionsBuilder<DataBaseContext> optionBuilder = new DbContextOptionsBuilder<DataBaseContext>();
+            optionBuilder.UseMySql(connectString);
+            return new DataBaseContext(optionBuilder.Options);
+
         }
     }
 }
