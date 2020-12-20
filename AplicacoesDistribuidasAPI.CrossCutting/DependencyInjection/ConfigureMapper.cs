@@ -12,7 +12,7 @@ namespace AplicacoesDistribuidasAPI.CrossCutting.DependencyInjection
         public static void ConfigureDependencieMapper(IServiceCollection serviceCollection)
         {
 
-            MapperConfiguration config = new AutoMapper.MapperConfiguration(config =>
+            MapperConfiguration config = new MapperConfiguration(config =>
             {
                 config.AddProfile(new DtoToModelProfile());
                 config.AddProfile(new EntityToDtoProfile());
