@@ -1,4 +1,7 @@
 using AplicacoesDistribuidasAPI.CrossCutting.DependencyInjection;
+using AplicacoesDistribuidasAPI.Domain.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -32,6 +36,41 @@ namespace AplicacoesDistribuidasAPI.Application
             ConfigureRepository.ConfigureDependenciesRepository(services);
             ConfigureDataBase.ConfigureDependenciesDataBase(services, Configuration.GetConnectionString("aplicacoesDistribuidas"));
 
+
+            // Configuration JTW
+            SigningConfiguration signingConfiguration = new SigningConfiguration();
+            services.AddSingleton(signingConfiguration);
+
+            TokenConfiguration tokenConfiguration = new TokenConfiguration();
+            new ConfigureFromConfigurationOptions<TokenConfiguration>(
+                Configuration.GetSection("TokenConfiguration")).Configure(tokenConfiguration);
+            services.AddSingleton(tokenConfiguration);
+
+
+            services.AddAuthentication(authOptions =>
+            {
+                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(bearerOptions =>
+            {
+                var paramsValidation = bearerOptions.TokenValidationParameters;
+                paramsValidation.IssuerSigningKey = signingConfiguration.Key;
+                paramsValidation.ValidAudience = tokenConfiguration.Audience;
+                paramsValidation.ValidIssuer = tokenConfiguration.Issuer;
+            });
+
+
+
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build());
+            });
+            // End Configuration JTW
+
             services.AddControllers();
 
             services.AddSwaggerGen(swaggerGen =>
@@ -49,6 +88,27 @@ namespace AplicacoesDistribuidasAPI.Application
                         Url = new Uri("https://github.com/Maarkis/AplicacoesDistribuidasAPI"),
                     }
                 });
+
+                swaggerGen.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Token JWT",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                swaggerGen.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        }, new List<string>()
+                    }
+                });
             });
 
         }
@@ -64,7 +124,7 @@ namespace AplicacoesDistribuidasAPI.Application
             app.UseSwagger();
             app.UseSwaggerUI(swaggerUI =>
             {
-                swaggerUI.SwaggerEndpoint("/swagger/v1/swagger.json", "CRUD de produto");
+                swaggerUI.SwaggerEndpoint("/swagger/v1/swagger.json", "Api Estudo");
                 swaggerUI.RoutePrefix = string.Empty;
             });
 
