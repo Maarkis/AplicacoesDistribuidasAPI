@@ -1,4 +1,5 @@
-﻿using AplicacoesDistribuidasAPI.Domain.Entities.Response;
+﻿using AplicacoesDistribuidasAPI.Domain.Dtos.User;
+using AplicacoesDistribuidasAPI.Domain.Entities.Response;
 using AplicacoesDistribuidasAPI.Domain.Entities.User;
 using AplicacoesDistribuidasAPI.Domain.Interfaces.Services.User;
 using Microsoft.AspNetCore.Authorization;
@@ -33,9 +34,9 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
 
             try
             {
-                ResponseBase<IEnumerable<UserEntity>> responseBase = new ResponseBase<IEnumerable<UserEntity>>();
+                ResponseBase<IEnumerable<UserDto>> responseBase = new ResponseBase<IEnumerable<UserDto>>();
 
-                IEnumerable<UserEntity> result = await _service.GetAll();
+                IEnumerable<UserDto> result = await _service.GetAll();
 
                 result = result.OrderBy(order => order.Name);
 
@@ -64,8 +65,14 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
 
             try
             {
-                ResponseBase<UserEntity> responseBase = new ResponseBase<UserEntity>();
-                UserEntity result = await service.Get(id);
+                ResponseBase<UserDto> responseBase = new ResponseBase<UserDto>();
+                UserDto result = await service.Get(id);
+                if (result == null)
+                {
+                    responseBase.Message = "Não foi encontrado usuário";
+                    responseBase.Success = false;
+                    return NotFound(responseBase);
+                }
 
                 responseBase.Message = "Busca realizada com sucesso!";
                 responseBase.Result = result;
@@ -80,9 +87,9 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
 
         }
 
-        [Authorize("Bearer")]
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] UserEntity user)
+        public async Task<ActionResult> Post([FromBody] UserDtoCreate user)
         {
             if (!ModelState.IsValid)
             {
@@ -90,12 +97,12 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
             }
             try
             {
-                UserEntity result = await _service.Post(user);
+                UserDtoCreateResult result = await _service.Post(user);
 
                 if (result == null)
                     return BadRequest();
 
-                ResponseBase<UserEntity> responseBase = new ResponseBase<UserEntity>();
+                ResponseBase<UserDtoCreateResult> responseBase = new ResponseBase<UserDtoCreateResult>();
                 responseBase.Message = "Usuário criado com sucesso!";
                 responseBase.Success = true;
                 responseBase.Result = result;
@@ -112,7 +119,7 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
 
         [Authorize("Bearer")]
         [HttpPut]
-        public async Task<ActionResult> Put([FromBody] UserEntity user)
+        public async Task<ActionResult> Put([FromBody] UserDtoUpdate user)
         {
             if (!ModelState.IsValid)
             {
@@ -121,12 +128,12 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
 
             try
             {
-                UserEntity result = await _service.Put(user);
+                UserDtoUpdateResult result = await _service.Put(user);
 
                 if (result == null)
                     return BadRequest();
 
-                ResponseBase<UserEntity> responseBase = new ResponseBase<UserEntity>();
+                ResponseBase<UserDtoUpdateResult> responseBase = new ResponseBase<UserDtoUpdateResult>();
                 responseBase.Message = "Usuário alterado com sucesso!";
                 responseBase.Success = true;
                 responseBase.Result = result;

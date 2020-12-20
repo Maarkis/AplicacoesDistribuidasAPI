@@ -1,21 +1,12 @@
 using AplicacoesDistribuidasAPI.CrossCutting.DependencyInjection;
-using AplicacoesDistribuidasAPI.Domain.Security;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AplicacoesDistribuidasAPI.Application
 {
@@ -36,43 +27,19 @@ namespace AplicacoesDistribuidasAPI.Application
             ConfigureRepository.ConfigureDependenciesRepository(services);
             ConfigureDataBase.ConfigureDependenciesDataBase(services, Configuration.GetConnectionString("aplicacoesDistribuidas"));
 
+            // Configuration Mapper
+            ConfigureMapper.ConfigureDependencieMapper(services);
+            // End Configuration Mapper
 
             // Configuration JTW
-            SigningConfiguration signingConfiguration = new SigningConfiguration();
-            services.AddSingleton(signingConfiguration);
-
-            TokenConfiguration tokenConfiguration = new TokenConfiguration();
-            new ConfigureFromConfigurationOptions<TokenConfiguration>(
-                Configuration.GetSection("TokenConfiguration")).Configure(tokenConfiguration);
-            services.AddSingleton(tokenConfiguration);
-
-
-            services.AddAuthentication(authOptions =>
-            {
-                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            }).AddJwtBearer(bearerOptions =>
-            {
-                var paramsValidation = bearerOptions.TokenValidationParameters;
-                paramsValidation.IssuerSigningKey = signingConfiguration.Key;
-                paramsValidation.ValidAudience = tokenConfiguration.Audience;
-                paramsValidation.ValidIssuer = tokenConfiguration.Issuer;
-            });
-
-
-
-            services.AddAuthorization(auth =>
-            {
-                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser()
-                    .Build());
-            });
+            ConfigureJwt.ConfigureDependenciesJwt(services, Configuration);
             // End Configuration JTW
+
+
 
             services.AddControllers();
 
+            // Configuration Swagger
             services.AddSwaggerGen(swaggerGen =>
             {
                 swaggerGen.SwaggerDoc("v1", new OpenApiInfo
@@ -110,6 +77,8 @@ namespace AplicacoesDistribuidasAPI.Application
                     }
                 });
             });
+
+            // End Configuration Swagger
 
         }
 

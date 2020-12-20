@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
   </ItemGroup>
 
@@ -12,6 +14,10 @@
     <ProjectReference Include="..\AplicacoesDistribuidasAPI.Data\AplicacoesDistribuidasAPI.Data.csproj" />
     <ProjectReference Include="..\AplicacoesDistribuidasAPI.Domain\AplicacoesDistribuidasAPI.Domain.csproj" />
     <ProjectReference Include="..\AplicacoesDistribuidasAPI.Service\AplicacoesDistribuidasAPI.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Mappings\User\" />
   </ItemGroup>
 
 </Project>
