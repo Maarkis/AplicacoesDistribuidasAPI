@@ -95,13 +95,15 @@ namespace AplicacoesDistribuidasAPI.Application
             {
                 swaggerUI.SwaggerEndpoint("/swagger/v1/swagger.json", "Api Estudo");
                 swaggerUI.RoutePrefix = string.Empty;
-            });
+            });          
+                                  
+
+            
+            app.UseAuthentication();
+            app.UseRouting();
+            app.UseAuthorization();
 
             app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

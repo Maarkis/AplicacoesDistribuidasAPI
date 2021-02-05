@@ -55,7 +55,10 @@ namespace AplicacoesDistribuidasAPI.Service.Services.User
                     new GenericIdentity(result.Email),
                     new[]{
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.UniqueName, result.Email)
+                        new Claim(JwtRegisteredClaimNames.UniqueName, result.Email),
+                        new Claim(ClaimTypes.Name, result.Name),
+                        new Claim(ClaimTypes.Role, "Editor"),
+                        new Claim(ClaimTypes.Role, "Admin")
                     });
 
                 DateTime createDate = DateTime.Now;

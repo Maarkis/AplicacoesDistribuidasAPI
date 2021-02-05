@@ -23,7 +23,7 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
             _service = service;
         }
 
-        [Authorize("Bearer")]
+       
         [HttpGet]
         public async Task<ActionResult> GetAll([FromServices] IUserService service)
         {
@@ -53,9 +53,10 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
             }
         }
 
-        [Authorize("Bearer")]
+
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        [Route("{id}", Name = "GetUserById")]
+        [Route("{id}", Name = "GetUserById")]        
         public async Task<ActionResult> Get([FromServices] IUserService service, Guid id)
         {
             if (!ModelState.IsValid)
@@ -117,7 +118,7 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
 
         }
 
-        [Authorize("Bearer")]
+        [Authorize(Roles = "Editor")]
         [HttpPut]
         public async Task<ActionResult> Put([FromBody] UserDtoUpdate user)
         {

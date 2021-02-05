@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AplicacoesDistribuidasAPI.CrossCutting.DependencyInjection
 {
@@ -27,19 +28,47 @@ namespace AplicacoesDistribuidasAPI.CrossCutting.DependencyInjection
 
             }).AddJwtBearer(bearerOptions =>
             {
-                var paramsValidation = bearerOptions.TokenValidationParameters;
-                paramsValidation.IssuerSigningKey = signingConfiguration.Key;
-                paramsValidation.ValidAudience = tokenConfiguration.Audience;
-                paramsValidation.ValidIssuer = tokenConfiguration.Issuer;
+                bearerOptions.RequireHttpsMetadata = false;
+                bearerOptions.SaveToken = true;
+
+                bearerOptions.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = signingConfiguration.Key,
+                    ValidateAudience = true,
+                    ValidAudience = tokenConfiguration.Audience,
+                    ValidateIssuer = true,
+                    ValidIssuer = tokenConfiguration.Issuer,
+
+                };
             });
 
 
 
             serviceCollection.AddAuthorization(auth =>
             {
-                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+
+                //auth.AddPolicy("Admin", builder =>
+                //{
+                //    builder.RequireAuthenticatedUser();
+                //    builder.RequireRole("Admin");
+                //});
+
+                //auth.AddPolicy("Editor", builder =>
+                //{
+                //    builder.RequireAuthenticatedUser();
+                //    builder.RequireRole("Editor");
+                //});
+
+                auth.AddPolicy("Administrador", new AuthorizationPolicyBuilder()
                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                     .RequireAuthenticatedUser()
+                    .RequireRole("Admin")                    
+                    .Build());
+
+                auth.AddPolicy("RequireEditorRole", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .RequireRole("Editor")
                     .Build());
             });
 
