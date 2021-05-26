@@ -149,7 +149,7 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
             }
         }
 
-        [Authorize("Bearer")]
+        [Authorize(Roles = "Editor")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {

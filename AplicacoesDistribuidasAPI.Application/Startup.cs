@@ -28,14 +28,10 @@ namespace AplicacoesDistribuidasAPI.Application
             ConfigureDataBase.ConfigureDependenciesDataBase(services, Configuration.GetConnectionString("aplicacoesDistribuidas"));
 
             // Configuration Mapper
-            ConfigureMapper.ConfigureDependencieMapper(services);
-            // End Configuration Mapper
+            ConfigureMapper.ConfigureDependencieMapper(services);           
 
             // Configuration JTW
             ConfigureJwt.ConfigureDependenciesJwt(services, Configuration);
-            // End Configuration JTW
-
-
 
             services.AddControllers();
 
@@ -46,7 +42,7 @@ namespace AplicacoesDistribuidasAPI.Application
                 {
                     Version = "v1",
                     Title = "API - Aplicação distribuídas",
-                    Description = "API para gerenciamento de crud de produto",
+                    Description = "API para gerenciamento de CRUD de produto",
                     TermsOfService = new Uri("https://github.com/Maarkis/AplicacoesDistribuidasAPI"),
                     Contact = new OpenApiContact
                     {
@@ -93,7 +89,7 @@ namespace AplicacoesDistribuidasAPI.Application
             app.UseSwagger();
             app.UseSwaggerUI(swaggerUI =>
             {
-                swaggerUI.SwaggerEndpoint("/swagger/v1/swagger.json", "Api Estudo");
+                swaggerUI.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
                 swaggerUI.RoutePrefix = string.Empty;
             });          
                                   

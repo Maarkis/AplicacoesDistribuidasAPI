@@ -10,6 +10,7 @@ namespace AplicacoesDistribuidasAPI.Data.Context
     public class DataBaseContext : DbContext
     {
         public DbSet<ProductEntity> Products { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
 
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) { }
 

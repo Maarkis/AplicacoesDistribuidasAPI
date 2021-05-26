@@ -4,7 +4,6 @@ using AplicacoesDistribuidasAPI.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AplicacoesDistribuidasAPI.Data.Repository

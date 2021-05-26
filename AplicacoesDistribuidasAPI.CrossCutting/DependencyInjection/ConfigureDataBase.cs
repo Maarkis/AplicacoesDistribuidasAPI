@@ -1,9 +1,7 @@
 ﻿using AplicacoesDistribuidasAPI.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace AplicacoesDistribuidasAPI.CrossCutting.DependencyInjection
 {
@@ -14,7 +12,7 @@ namespace AplicacoesDistribuidasAPI.CrossCutting.DependencyInjection
 
             serviceCollection.AddDbContext<DataBaseContext>(options =>
             {
-                options.UseMySql(connectionString);
+                options.UseSqlServer(connectionString);
             });
         }
     }
