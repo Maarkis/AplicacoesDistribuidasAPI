@@ -7,6 +7,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace AplicacoesDistribuidasAPI.Application
 {
@@ -37,19 +39,20 @@ namespace AplicacoesDistribuidasAPI.Application
 
             // Configuration Swagger
             services.AddSwaggerGen(swaggerGen =>
-            {
+            {                              
                 swaggerGen.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "API - Aplicação distribuídas",
-                    Description = "API para gerenciamento de CRUD de produto",
+                    Description = "API para gerenciamento de CRUD de produto e usuários",
                     TermsOfService = new Uri("https://github.com/Maarkis/AplicacoesDistribuidasAPI"),
                     Contact = new OpenApiContact
                     {
                         Name = "Jean Markis",
                         Email = "jeanmarkis85@gmail.com",
                         Url = new Uri("https://github.com/Maarkis/AplicacoesDistribuidasAPI"),
-                    }
+                    }                   
+
                 });
 
                 swaggerGen.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -72,6 +75,10 @@ namespace AplicacoesDistribuidasAPI.Application
                         }, new List<string>()
                     }
                 });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                swaggerGen.IncludeXmlComments(xmlPath);
             });
 
             // End Configuration Swagger
@@ -86,6 +93,8 @@ namespace AplicacoesDistribuidasAPI.Application
                 app.UseDeveloperExceptionPage();
             }
 
+
+            app.UseCors("MyAllowSpecificOrigins");
             app.UseSwagger();
             app.UseSwaggerUI(swaggerUI =>
             {

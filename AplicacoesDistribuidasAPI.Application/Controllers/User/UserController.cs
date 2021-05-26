@@ -23,8 +23,15 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
             _service = service;
         }
 
-       
+
+        /// <summary>
+        /// Lista todos os usuários do sistema - Necessita de autenticação.
+        /// </summary>
+        /// <returns>Os usuários</returns>
+        /// <response code="200">Retorna os usuários cadastrados</response>
+        /// <response code="401">Não autorizado</response>
         [HttpGet]
+        [Authorize(Roles = "Editor")]
         public async Task<ActionResult> GetAll([FromServices] IUserService service)
         {
             if (!ModelState.IsValid)
@@ -53,7 +60,12 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
             }
         }
 
-
+        /// <summary>
+        /// Obtêm um usuário do sistema pelo Id - Necessita de autenticação.
+        /// </summary>
+        /// <returns>Um usuário</returns>
+        /// <response code="200">Retorna um usuário cadastrado obtido pelo Id</response>        
+        /// <response code="401">Não autorizado</response>
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("{id}", Name = "GetUserById")]        
@@ -88,6 +100,26 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
 
         }
 
+
+
+        /// <summary>
+        /// Cria um usuário no sistema - Não necessita de autenticação.
+        /// </summary>
+        /// <remarks>
+        /// Exemplo:
+        ///
+        ///     POST /User
+        ///     {        
+        ///        "name": "João",
+        ///        "email": "joao@gmail.com"
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="user"></param>
+        /// <returns>Um novo item criado</returns>
+        /// <response code="201">Usuário criado com sucesso</response>
+        /// <response code="400">Se o usuário não for criado</response>        
+        /// <response code="500">Erro interno</response>
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] UserDtoCreate user)
@@ -118,6 +150,28 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
 
         }
 
+
+
+
+        /// <summary>
+        /// Edita um usuário do sistema - Necessita de autenticação.
+        /// </summary>
+        /// <remarks>
+        /// Exemplo:
+        ///
+        ///     PUT /User
+        ///     {        
+        ///        "Id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ///        "name": "João",
+        ///        "email": "joao@gmail.com"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>Edição de um usuário</returns>
+        /// <param name="user"></param>
+        /// <response code="200">Retorna um usuário editado com sucesso</response>             
+        /// <response code="401">Não autorizado</response>
+        /// <response code="500">Erro interno</response>
         [Authorize(Roles = "Editor")]
         [HttpPut]
         public async Task<ActionResult> Put([FromBody] UserDtoUpdate user)
@@ -149,6 +203,16 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
             }
         }
 
+
+
+        /// <summary>
+        /// Deleta um usuário do sistema pelo Id - Necessita de autenticação.
+        /// </summary>
+        /// <returns>Usuário deletado</returns>
+        /// <param name="id"></param>
+        /// <response code="200">Usuário deletado com sucesso</response>     
+        /// <response code="401">Não autorizado</response>
+        /// <response code="500">Erro interno</response>
         [Authorize(Roles = "Editor")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id)

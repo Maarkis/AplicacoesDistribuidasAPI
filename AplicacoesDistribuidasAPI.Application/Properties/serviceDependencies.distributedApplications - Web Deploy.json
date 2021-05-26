@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/aplicacoesdistribuidasdb/databases/AplicacoesDistribuidasAPI.Aplicacoesdistribuidas",
+      "type": "mssql.azure",
+      "connectionId": "aplicacoesDistribuidas",
+      "secretStore": null
+    }
+  }
+}

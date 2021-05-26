@@ -14,6 +14,8 @@ namespace AplicacoesDistribuidasAPI.CrossCutting.DependencyInjection
             {
                 options.UseSqlServer(connectionString);
             });
+
+            
         }
     }
 }

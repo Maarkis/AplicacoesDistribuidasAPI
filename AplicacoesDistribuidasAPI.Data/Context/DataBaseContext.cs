@@ -12,7 +12,9 @@ namespace AplicacoesDistribuidasAPI.Data.Context
         public DbSet<ProductEntity> Products { get; set; }
         public DbSet<UserEntity> Users { get; set; }
 
-        public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) { }
+        public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) {
+            Database.EnsureCreated();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
