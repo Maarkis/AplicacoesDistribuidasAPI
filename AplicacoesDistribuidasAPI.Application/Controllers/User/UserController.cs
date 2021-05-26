@@ -65,6 +65,7 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
         /// </summary>
         /// <returns>Um usuário</returns>
         /// <response code="200">Retorna um usuário cadastrado obtido pelo Id</response>        
+        /// <response code="404">Usuário não encontrado</response>
         /// <response code="401">Não autorizado</response>
         [Authorize(Roles = "Admin")]
         [HttpGet]
@@ -170,6 +171,7 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
         /// <returns>Edição de um usuário</returns>
         /// <param name="user"></param>
         /// <response code="200">Retorna um usuário editado com sucesso</response>             
+        /// <response code="400">Usuário não editado</response>
         /// <response code="401">Não autorizado</response>
         /// <response code="500">Erro interno</response>
         [Authorize(Roles = "Editor")]
@@ -211,6 +213,7 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
         /// <returns>Usuário deletado</returns>
         /// <param name="id"></param>
         /// <response code="200">Usuário deletado com sucesso</response>     
+        /// <response code="400">Usuário não deletado</response>
         /// <response code="401">Não autorizado</response>
         /// <response code="500">Erro interno</response>
         [Authorize(Roles = "Editor")]
@@ -225,8 +228,16 @@ namespace AplicacoesDistribuidasAPI.Application.Controllers.User
             try
             {
                 bool result = await _service.Delete(id);
-
                 ResponseBase<bool> responseBase = new ResponseBase<bool>();
+
+                if (!result)
+                {
+                    responseBase.Message = "Usuário não deletado!";
+                    responseBase.Success = result;
+                    responseBase.Result = result;
+                    return BadRequest(responseBase);
+                }                
+                
                 responseBase.Message = "Usuário deletado com sucesso!";
                 responseBase.Success = result;
                 responseBase.Result = result;
